@@ -6,7 +6,7 @@ The above zip file contains code for GUI and the dataset.
 
 1. Unzip the file
 2. Then install requriments.txt
-3. To run the code type
+3. To run the code type in terminal 
 
 ```
 streamlit run Image_classify.py
