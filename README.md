@@ -13,4 +13,5 @@ streamlit run Image_classify.py
 ```
 
 The notebook for training can also be found here : https://www.kaggle.com/keagle/coty-classifier-model
+
 The dataset for training can also be found here : https://www.kaggle.com/keagle/cotyair-pollution
