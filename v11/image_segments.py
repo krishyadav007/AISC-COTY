@@ -2,6 +2,7 @@ from yolov5 import YOLOv5
 import numpy as np
 import glob
 import keras
+import cv2
 from PIL import ImageOps, Image
 
 # Loading the model
@@ -62,5 +63,6 @@ crops = object_result.crop(save=True)
 
 for name in glob.glob('runs/detect/exp/crops/*/*'):
     img = Image.open(name)
+    # cv2.imread(name)
     machine_classification(img)
     # print(name)
