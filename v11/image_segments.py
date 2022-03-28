@@ -19,15 +19,16 @@ def machine_classification(img):
     #turn the image into a numpy array
     image_array = np.asarray(image)[:, :, ::-1].copy()
     # Normalize the image
-    normalized_image_array = (image_array.astype(np.float32) / 127.0) - 1
+    # normalized_image_array = (image_array.astype(np.float32) / 127.0) - 1
 
     # Load the image into the array
-    data[0] = normalized_image_array
-
+    # data[0] = normalized_image_array
+    data = image_array
     # run the inference
     prediction = model.predict(data)
     label = np.argmax(prediction)
-    print(image_array, caption=('Predictions: ' + str(prediction) ), use_column_width=True)
+    print(str(prediction))
+    # print(image_array, ('Predictions: ' + str(prediction) ), use_column_width=True)
     if label == 0:
         print("The image is of pollution")
         print("Trying to send mail to authorities")
@@ -62,7 +63,12 @@ objects_df = object_result.pandas().xyxy[0]
 crops = object_result.crop(save=True)
 
 for name in glob.glob('runs/detect/exp/crops/*/*'):
+    print("LOGGING FOR", name)
     img = Image.open(name)
-    # cv2.imread(name)
-    machine_classification(img)
+    if img != None:
+        # cv2.imread(name)
+        img.convert("RGB")
+        machine_classification(img)
     # print(name)
+    else:
+        pass
