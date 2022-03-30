@@ -1,34 +1,38 @@
-
 <!DOCTYPE html>
 <html>
   <head>
     <title>Index html</title>
-    <script type="text/javascript">
-      function do_ajax(lp_no) {
-        var req = new XMLHttpRequest();
-        var result = document.getElementById('result');
-        req.onreadystatechange = function()
-        {
-          if(this.readyState == 4 && this.status == 200) {
-            result.innerHTML = "The mail was delivered";
-          } else if(this.status > 400) {
-            result.innerHTML = "The mail didn't went successfully";
-          }else {
-            result.innerHTML = "Sending mail";
-          }
-        }
-
-        req.open('GET', '/mail/'+lp_no, true);
-        req.setRequestHeader('content-type', 'application/x-www-form-urlencoded;charset=UTF-8');
-        req.send("name=" + document.getElementById('name').value);
-      }
-    </script>
   </head>
   <body>
-    <form action="index" method="post">
-      <label>Test mail:<input type="text" id="name" value="" /></label>
-      <button type="button" id="btn-post" onclick="do_ajax('LP300');">Send mail</button>
-      <div id="result"></div>
-    </form>
+    <script type="text/javascript">
+      time_id = -1;
+      function start_infering() {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+          if (this.readyState == 4 && this.status == 200) {
+            time_id = xhttp.responseText;
+            // document.body.innerHTML = xhttp.responseText;
+          }
+        };
+        xhttp.open("GET", "/infer/earth.mp4", true);
+        xhttp.send();
+      }
+      
+      function periodic_results() {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+          if (this.readyState == 4 && this.status == 200) {
+            // time_id = xhttp.responseText;
+            document.body.innerHTML += xhttp.responseText;
+          }
+        };
+        xhttp.open("GET", "/results/"+time_id, true);
+        xhttp.send();
+      }
+      start_infering();
+      var intervalId = setInterval(function() {
+        periodic_results();
+      }, 5000);
+    </script>
   </body>
 </html>

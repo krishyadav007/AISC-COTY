@@ -1,7 +1,7 @@
 import os
 import time
 from app import app
-# import infer
+import infer
 import mailer
 from flask import Flask, flash, request, redirect, url_for, render_template
 from werkzeug.utils import secure_filename
