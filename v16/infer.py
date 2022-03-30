@@ -8,6 +8,7 @@ import license_plate as lp
 from PIL import Image, ImageDraw, ImageFont
 import re
 import tensorflow as tf
+import shutil
 
 from object_detection.utils import label_map_util
 from object_detection.utils import config_util
@@ -174,8 +175,11 @@ def smoke_detection_json(frame, time_id):
             lp_no = re.sub(r'[^\w]', '', lp_no)
             lp_no = lp_no.strip()
 
-            with open("/static/"+time_id+".txt", "a") as fo:
+            with open("static/logs/"+time_id+".txt", "a") as fo:
+              fo.write("\n")
               fo.write(lp_no + ","+"img_arr"+","+"yes")
+            shutil.copyfile("static/logs/"+time_id+".txt", "static/logs/c_"+time_id+".txt")
+            
             # # if lp_no not in LIST_OF_LP:
             #     LIST_OF_LP.append(lp_no)
             #     st.image(result_image, caption="Detected image", width=300)
@@ -190,8 +194,11 @@ def smoke_detection_json(frame, time_id):
             print("SOME ERROR OCCURED, SKIPPING THE FRAME")
 
 def proccess(file_name, time_id):
-  cap = cv2.VideoCapture(file_name)
+  cap = cv2.VideoCapture("static/uploads/"+file_name)
   length = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+  with open("static/logs/"+time_id+".txt", "x") as fo:
+    fo.write(time_id + ","+"img_arr"+","+"yes")
+  # print("THE FILE SIZE IS " + str(length))
   cnt = 0
   while(cap.isOpened()):
       ret, frame = cap.read() 
@@ -207,5 +214,5 @@ def proccess(file_name, time_id):
   return "PROCCESSING COMPLETED"
 
 def results(time_id):
-  with open("/static/"+time_id+".txt", "r") as fo:
+  with open("static/logs/c_"+time_id+".txt", "r") as fo:
     return fo.read()
