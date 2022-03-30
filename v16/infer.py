@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
-import time
+import base64
+from io import BytesIO
 import os
 import cv2
 import numpy as np
@@ -169,16 +170,20 @@ def smoke_detection_json(frame, time_id):
     no_of_boxes, result_image = predict_infer(frame)
     if no_of_boxes > 0: 
         result_image = cv2.cvtColor(result_image, cv2.COLOR_BGR2RGB)
-        try:
-            lp_no = lp.license_plate_pipeline(result_image)
-            lp_no = lp_no.lower()
-            lp_no = re.sub(r'[^\w]', '', lp_no)
-            lp_no = lp_no.strip()
+        # try:
+        lp_no = lp.license_plate_pipeline(result_image)
+        lp_no = lp_no.lower()
+        lp_no = re.sub(r'[^\w]', '', lp_no)
+        lp_no = lp_no.strip()
+        image_PIL = Image.fromarray(result_image)
 
-            with open("static/logs/"+time_id+".txt", "a") as fo:
-              fo.write("\n")
-              fo.write(lp_no + ","+"img_arr"+","+"yes")
-            shutil.copyfile("static/logs/"+time_id+".txt", "static/logs/c_"+time_id+".txt")
+        with open("static/logs/"+time_id+".txt", "a") as fo:
+          fo.write("\n")
+          buffered = BytesIO()
+          image_PIL.save(buffered, format="JPEG")
+          img_str = base64.b64encode(buffered.getvalue())
+          fo.write(lp_no + ","+img_str)
+          shutil.copyfile("static/logs/"+time_id+".txt", "static/logs/c_"+time_id+".txt")
             
             # # if lp_no not in LIST_OF_LP:
             #     LIST_OF_LP.append(lp_no)
@@ -190,8 +195,8 @@ def smoke_detection_json(frame, time_id):
             #         st.write("Mail sent")
             #     if st.button('No', key=lp_no+"n"):
             #         st.write("Mail cancelled")
-        except:
-            print("SOME ERROR OCCURED, SKIPPING THE FRAME")
+        # except:
+            # print("SOME ERROR OCCURED, SKIPPING THE FRAME")
 
 def proccess(file_name, time_id):
   cap = cv2.VideoCapture("static/uploads/"+file_name)

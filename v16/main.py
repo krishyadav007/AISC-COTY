@@ -10,6 +10,10 @@ from werkzeug.utils import secure_filename
 def upload_form():
 	return render_template('upload.html')
 
+@app.route('/ui')
+def upload_ui():
+	return render_template('ui.html')
+
 @app.route('/index')
 def show_index():
 	return render_template('index.html')
@@ -26,9 +30,10 @@ def upload_video():
 	else:
 		filename = secure_filename(file.filename)
 		file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-		#print('upload_video filename: ' + filename)
-		flash('Video successfully uploaded and displayed below')
-		return render_template('upload.html', filename=filename)
+		print('upload_video filename: ' + filename)
+		flash('Video successfully uploaded')
+		flash('Started proccessing')
+		return render_template('ui.html', filename=filename)
 
 @app.route('/display/<filename>')
 def display_video(filename):
@@ -43,7 +48,7 @@ def mail_api(lp_no):
 @app.route('/infer/<file_name>')
 def infer_api(file_name):
     time_id = str(int(time.time()))
-    infer.proccess(file_name, time_id=time_id)
+    infer.proccess(file_name, time_id=time_id) #Want to make this async
     return time_id
 
 @app.route('/results/<time_id>')
