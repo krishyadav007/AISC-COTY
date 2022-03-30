@@ -1,0 +1,34 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Index html</title>
+    <script type="text/javascript">
+      function do_ajax(lp_no) {
+        var req = new XMLHttpRequest();
+        var result = document.getElementById('result');
+        req.onreadystatechange = function()
+        {
+          if(this.readyState == 4 && this.status == 200) {
+            result.innerHTML = "The mail was delivered";
+          } else if(this.status > 400) {
+            result.innerHTML = "The mail didn't went successfully";
+          }else {
+            result.innerHTML = "Sending mail";
+          }
+        }
+
+        req.open('GET', '/mail/'+lp_no, true);
+        req.setRequestHeader('content-type', 'application/x-www-form-urlencoded;charset=UTF-8');
+        req.send("name=" + document.getElementById('name').value);
+      }
+    </script>
+  </head>
+  <body>
+    <form action="index" method="post">
+      <label>Test mail:<input type="text" id="name" value="" /></label>
+      <button type="button" id="btn-post" onclick="do_ajax('LP300');">Send mail</button>
+      <div id="result"></div>
+    </form>
+  </body>
+</html>
