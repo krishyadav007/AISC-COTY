@@ -1,0 +1,44 @@
+<!doctype html>
+<title>Python Flask - Video Upload and Play Example</title>
+<h2>Select a video to upload and play</h2>
+<p>
+	{% with messages = get_flashed_messages() %}
+	  {% if messages %}
+		<ul>
+		{% for message in messages %}
+		  <li>{{ message }}</li>
+		{% endfor %}
+		</ul>
+	  {% endif %}
+	{% endwith %}
+</p>
+{% if filename %}
+	<div style="margin: 10px auto;">
+		<video autoplay="autoplay" controls="controls" preload="preload">
+			<source src="{{ url_for('display_video', filename=filename) }}" type="video/mp4"></source>
+		</video>
+	</div>
+{% endif %}
+<form method="post" action="/upload" enctype="multipart/form-data">
+    <dl>
+		<p>
+			<input type="file" name="file" autocomplete="off" required>
+		</p>
+    </dl>
+    <p>
+		<input type="submit" value="Upload">
+	</p>
+</form>
+
+<script>
+	// var xhttp = new XMLHttpRequest();
+	// xhttp.onreadystatechange = function() {
+	// 	if (this.readyState == 4 && this.status == 200) {
+	// 		// Typical action to be performed when the document is ready:
+	// 		document.body.innerHTML = xhttp.responseText;
+	// 	}
+	// };
+	// xhttp.open("GET", "/infer/earth.mp4", true);
+	// xhttp.send();
+	// console.log("YO")
+</script>

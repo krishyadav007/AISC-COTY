@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Index html</title>
+  </head>
+  <body>
+    <script type="text/javascript">
+      time_id = -1;
+      function start_infering() {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+          if (this.readyState == 4 && this.status == 200) {
+            time_id = xhttp.responseText;
+            // document.body.innerHTML = xhttp.responseText;
+          }
+        };
+        xhttp.open("GET", "/infer/lp_pak.mp4", true);
+        xhttp.send();
+      }
+      
+      function periodic_results() {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+          if (this.readyState == 4 && this.status == 200) {
+            // time_id = xhttp.responseText;
+            document.body.innerHTML += xhttp.responseText;
+          }
+        };
+        xhttp.open("GET", "/results/"+time_id, true);
+        xhttp.send();
+      }
+      // start_infering();
+      // var intervalId = setInterval(function() {
+      //   periodic_results();
+      // }, 5000);
+    </script>
+  </body>
+</html>
