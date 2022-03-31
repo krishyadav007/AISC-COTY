@@ -9,7 +9,7 @@ import license_plate as lp
 from PIL import Image, ImageDraw, ImageFont
 import re
 import tensorflow as tf
-import shutil
+import ov
 
 from object_detection.utils import label_map_util
 from object_detection.utils import config_util
@@ -175,7 +175,8 @@ def smoke_detection_json(frame, time_id):
           lp_no = lp_no.lower()
           lp_no = re.sub(r'[^\w]', '', lp_no)
           lp_no = lp_no.strip()
-          image_PIL = Image.fromarray(result_image)
+          vinoed_img = ov.procceess(result_image)
+          image_PIL = Image.fromarray(vinoed_img)
 
           with open("static/logs/"+time_id+".txt", "a") as fo:
             buffered = BytesIO()

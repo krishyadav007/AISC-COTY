@@ -9,7 +9,6 @@ import license_plate as lp
 from PIL import Image, ImageDraw, ImageFont
 import re
 import tensorflow as tf
-import shutil
 
 from object_detection.utils import label_map_util
 from object_detection.utils import config_util
