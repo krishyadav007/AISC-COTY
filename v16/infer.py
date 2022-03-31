@@ -170,21 +170,24 @@ def smoke_detection_json(frame, time_id):
     no_of_boxes, result_image = predict_infer(frame)
     if no_of_boxes > 0: 
         result_image = cv2.cvtColor(result_image, cv2.COLOR_BGR2RGB)
-        # try:
-        lp_no = lp.license_plate_pipeline(result_image)
-        lp_no = lp_no.lower()
-        lp_no = re.sub(r'[^\w]', '', lp_no)
-        lp_no = lp_no.strip()
-        image_PIL = Image.fromarray(result_image)
+        try:
+          lp_no = lp.license_plate_pipeline(result_image)
+          lp_no = lp_no.lower()
+          lp_no = re.sub(r'[^\w]', '', lp_no)
+          lp_no = lp_no.strip()
+          image_PIL = Image.fromarray(result_image)
 
-        with open("static/logs/"+time_id+".txt", "a") as fo:
-          fo.write("\n")
-          buffered = BytesIO()
-          image_PIL.save(buffered, format="JPEG")
-          img_str = base64.b64encode(buffered.getvalue())
-          fo.write(lp_no + ","+img_str)
-          shutil.copyfile("static/logs/"+time_id+".txt", "static/logs/c_"+time_id+".txt")
-            
+          with open("static/logs/"+time_id+".txt", "a") as fo:
+            buffered = BytesIO()
+            image_PIL.save(buffered, format="PNG")
+            buffered.seek(0)
+            img_byte = buffered.getvalue()
+            img_str = "data:image/png;base64," + base64.b64encode(img_byte).decode()
+            fo.write('['+lp_no + ","+img_str+'],\n')
+            shutil.copyfile("static/logs/"+time_id+".txt", "static/logs/c_"+time_id+".txt")
+        except:
+            print("SOME ERROR OCCURED, SKIPPING THE FRAME")
+    
             # # if lp_no not in LIST_OF_LP:
             #     LIST_OF_LP.append(lp_no)
             #     st.image(result_image, caption="Detected image", width=300)
@@ -195,14 +198,11 @@ def smoke_detection_json(frame, time_id):
             #         st.write("Mail sent")
             #     if st.button('No', key=lp_no+"n"):
             #         st.write("Mail cancelled")
-        # except:
-            # print("SOME ERROR OCCURED, SKIPPING THE FRAME")
-
 def proccess(file_name, time_id):
   cap = cv2.VideoCapture("static/uploads/"+file_name)
   length = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
   with open("static/logs/"+time_id+".txt", "x") as fo:
-    fo.write(time_id + ","+"img_arr"+","+"yes")
+    fo.write("[")
   # print("THE FILE SIZE IS " + str(length))
   cnt = 0
   while(cap.isOpened()):
@@ -214,8 +214,12 @@ def proccess(file_name, time_id):
           cap.set(cv2.CAP_PROP_POS_FRAMES, 0)
           break
       print( "The progress is : ", cnt, "/",length )
+      if cnt > 10:
+        break
       cnt += 1
   cap.release()
+  with open("static/logs/"+time_id+".txt", "a") as fo:
+    fo.write("]")
   return "PROCCESSING COMPLETED"
 
 def results(time_id):
