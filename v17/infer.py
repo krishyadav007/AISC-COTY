@@ -176,7 +176,7 @@ def smoke_detection_json(frame, time_id):
           lp_no = re.sub(r'[^\w]', '', lp_no)
           lp_no = lp_no.strip()
           vinoed_img = ov.procceess(result_image)
-          image_PIL = Image.fromarray(vinoed_img)
+          image_PIL = Image.fromarray(result_image)
 
           with open("static/logs/"+time_id+".txt", "a") as fo:
             buffered = BytesIO()
