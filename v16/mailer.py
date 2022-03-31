@@ -6,20 +6,15 @@ def send_mail(lp_no):
     sender_email = "computersciencevoyager@gmail.com"  # Enter your address
     receiver_email = "7krishyadav@gmail.com"  # Enter receiver address
     password = "zvhqozhofqddrgzj"
+    message = """Subject: Challan
+Dear Krish,
 
-    message = """\
-    Subject: Challan
+Your vehicle with the license number """ + lp_no + """ has been spotted having improper pollution controls. Thus it is unfit for roads.
+Kindly get the vehicle repaired and get a PUC certificate at earliest.
 
-    Respected sir/ma'am,
-
-    Your vehicle with the license number """ + lp_no + """has been spotted having improper pollution controls. Thus it     }
-is unfit for roads 
-    
-    Kindly get the vehicle repaired and get a PUC certificate at earliest.
-
-    Thank you
-    AI POLLUTION INSPECTOR BOT
-    """
+Thank you
+AI POLLUTION INSPECTOR BOT
+"""
     # This is to inform that your vehicle with license plate xxxx is not in compliance with PUC act of India, and you are thereby penalized.
     context = ssl.create_default_context()
     with smtplib.SMTP_SSL(smtp_server, port, context=context) as server:
